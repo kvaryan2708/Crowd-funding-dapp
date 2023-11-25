@@ -16,7 +16,7 @@
 pragma solidity >=0.5.0 <0.9.0;
 
 contract CrowdFund{
-    address public manager;
+    address public manager=0xd377254722D3274f66eB66c392925F6052335CcB;
     uint public balance=0;
    uint  total=0;
     uint  pass=335566;
@@ -59,9 +59,7 @@ function viewS(uint id) public view returns(string memory){
     mapping (address=>uint) public passcode;
     mapping(address=>uint) public candidates;
 
-    constructor() public  {
-        manager=msg.sender;
-    }
+    
 
     
 
@@ -81,7 +79,7 @@ function viewS(uint id) public view returns(string memory){
     }
 
 function SendEth(address payable x) public payable{
-    require(x==manager);
+    // require(x==manager);
    
     x.transfer(msg.value);
     if(data[msg.sender]==0)total++;

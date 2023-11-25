@@ -45,7 +45,7 @@
 const { MNEMONIC, PROJECT_ID } = process.env;
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-//this comment is for creating osme changes
+//this comment is for creating some changes
 
 module.exports = {
   /**
