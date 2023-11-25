@@ -13,6 +13,9 @@ function Register() {
    account: null,
   });
 
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+
   useEffect(() => {
     async function loadWeb3() {
       if (window.ethereum) {
@@ -24,8 +27,8 @@ function Register() {
           CrowdFund.abi,
           deployedNetwork.address
         );
-        const accounts = await web3.eth.getAccounts();
-        const account = accounts[0];
+       //const accounts = await web3.eth.getAccounts();
+       const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
         setState({ web3, contract, account });
      
       } else {
@@ -36,11 +39,11 @@ function Register() {
     loadWeb3();
   }, []);
 
-  const [address, setAddress] = useState("");
-  const [password, setPassword] = useState("");
+  
 
   const handleRegistration = async () => {
     const {contract}=state;
+    console.log(contract);
    
 
     await contract.methods.register(address,password).send({from: address});
