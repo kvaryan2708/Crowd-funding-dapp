@@ -15,7 +15,13 @@ import Register from "./Register";
 import Navbar from "./Navbar";
 import Voting from "./Voting";
 import Withdraw from "./Withdraw"
-
+import Signup from "./Signup"
+import MyAccount from "./MyAccount"
+import Sendpoints from "./Sendpoints"
+import Contri_req from "./Contri_req"
+import ViewContri from "./ViewContri"
+import Pay from "./Pay"
+import ViewPayee from "./ViewPayee"
 function App() {
   const [state, setState] = useState({
     web3: null,
@@ -82,6 +88,13 @@ useEffect(() => {
           <Route exact path='/CreateReq' element={<CreateReq/>}/>
           <Route exact path='/Voting' element={<Voting/>}/>
           <Route exact path='/Withdraw' element={<Withdraw/>}/>
+          <Route exact path='/Signup' element={<Signup/>}/>
+          <Route exact path='/MyAccount' element={<MyAccount/>}/>
+          <Route exact path='/Sendpoints' element={<Sendpoints/>}/>
+          <Route exact path='/Contri_req' element={<Contri_req/>}/>
+          <Route exact path='/ViewContri' element={<ViewContri/>}/>
+          <Route exact path='/Pay' element={<Pay/>}/>
+          <Route exact path='/ViewPayee' element={<ViewPayee/>}/>
         </Routes>
       </Router>
       

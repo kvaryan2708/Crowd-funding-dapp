@@ -113,5 +113,114 @@ require(passcode[r]==p);
 return data[r]; 
     
 }
+
+ uint people=0;
+    uint password=335566;
+
+    struct MyAccount{
+    string name;
+    uint points;
+    uint passcode;
+    
+    
+    
+    
+ 
+}
+
+mapping(address=>MyAccount) public records;
+mapping(address=>uint ) public records3;
+
+function Signup(string memory _name,address ad,uint _p) public{
+    MyAccount storage newdata=records[ad];
+    newdata.name=_name;
+    newdata.points=0;
+    newdata.passcode=_p;
+    if(records3[ad]==0)
+    people++;
+
+    records3[ad]=1;
+}
+
+function Profile_name(address ad,uint passs) public view returns(string memory){
+    require(records[ad].passcode==passs);
+    return records[ad].name;
+}
+
+function Profile_points(address ad,uint passs) public view returns(uint){
+    require(records[ad].passcode==passs);
+    return records[ad].points;
+}
+
+function Sendpoints(uint x,address ad,uint passs) public {
+require(password==passs);
+records[ad].points+=x;
+}
+
+struct Contri{
+    string des;
+    uint total;
+    uint person;
+    uint collected;
+    uint client;
+    string status;
+}
+struct Payees{
+    string[]   names;
+    uint totall;
+
+}
+mapping(uint=>Payees) public records2;
+
+mapping(uint=>Contri) public records1;
+uint contri_num=0;
+function Contri_req(string memory _des,uint _total,uint passs) public {
+    require(passs==password);
+    contri_num++;
+    Contri storage newdata=records1[contri_num];
+    newdata.des=_des;
+    newdata.total=_total;
+    newdata.person=(_total/people)+1;
+    newdata.collected=0;
+    newdata.status="Not Competed";
+    newdata.client=0;
+    Payees storage payee=records2[contri_num];
+    payee.totall=0;
+}
+
+function Pay(uint req_no,address ad,uint x) public {
+   require(records[ad].passcode==x);
+    require(records[ad].points>=records1[req_no].person);
+    records[ad].points=(records[ad].points)-(records1[req_no].person);
+    records1[req_no].collected+=(records1[req_no].person);
+    if(records1[req_no].collected>=records1[req_no].total)records1[req_no].status="Completed";
+    records2[req_no].totall++;
+    (records2[req_no].names).push(records[ad].name);
+    records1[req_no].client++;
+
+
+}
+function ViewPayee(uint num,uint val) public view returns(string memory){
+    return (records2[num].names)[val-1];
+}
+
+function View_des(uint num) public view returns(string memory){
+return records1[num].des;
+}
+function View_total(uint num) public view returns(uint){
+return records1[num].total;
+}
+function View_person(uint num) public view returns(uint){
+return records1[num].person;
+}
+function View_remaining(uint num) public view returns(uint){
+return records1[num].collected;
+}
+function View_client(uint num) public view returns(uint){
+return records1[num].client;
+}
+function View_status(uint num) public view returns(string memory){
+return records1[num].status;
+}
     
 }
