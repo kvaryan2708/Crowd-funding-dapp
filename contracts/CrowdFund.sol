@@ -132,6 +132,7 @@ mapping(address=>MyAccount) public records;
 mapping(address=>uint ) public records3;
 
 function Signup(string memory _name,address ad,uint _p) public{
+    require(records3[ad]==0);
     MyAccount storage newdata=records[ad];
     newdata.name=_name;
     newdata.points=0;
