@@ -1,28 +1,30 @@
-/*This is my frontend code connected to smart contract by web3
-All the imported functions are included in separate files*/
-
 import { useState, useEffect } from "react";
 import CrowdFund from "./contracts/CrowdFund.json";
 import Web3 from "web3";
 import "./App.css";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import CreateReq from "./CreateReq";
-import ViewReq from "./ViewReq";
-import Sendeth from "./Sendeth";
-import Find from "./Find";
-import Register from "./Register";
-import Navbar from "./Navbar";
-import Voting from "./Voting";
-import Withdraw from "./Withdraw"
-import Signup from "./Signup"
-import MyAccount from "./MyAccount"
-import Sendpoints from "./Sendpoints"
-import Contri_req from "./Contri_req"
-import ViewContri from "./ViewContri"
-import Pay from "./Pay"
-import ViewPayee from "./ViewPayee"
+import { BrowserRouter as Router, Route, Routes,Link } from "react-router-dom";
+import Home from "./pages/Home";
+import CrowdFunding from "./pages/CrowdFunding";
+import Coins from "./pages/Coins";
+import CreateReq from "./components/CrowdFunding/CreateReq";
+import Contri_req from "./components/CrowdFunding/Contri_req";
+import ViewReq from "./components/CrowdFunding/ViewReq";
+import Sendeth from "./components/CrowdFunding/Sendeth";
+import Find from "./components/CrowdFunding/Find";
+import Voting from "./components/CrowdFunding/Voting";
+
+import MyAccount from "./components/Coins/MyAccount";
+import Pay from "./components/Coins/Pay";
+import Register from "./components/Coins/Register";
+import Sendpoints from "./components/Coins/Sendpoints";
+import Signup from "./components/Coins/Signup";
+import ViewContri from "./components/Coins/ViewContri";
+import ViewPayee from "./components/Coins/ViewPayee";
+import { Header } from "./components/Header";
+
 function App() {
+  const web3 = new Web3(window.ethereum);
   const [state, setState] = useState({
     web3: null,
     contract: null,
@@ -31,12 +33,24 @@ function App() {
   
   const [manager ,setManager]=useState();
   const [balance,setBalance]=useState();
+  const [connectedAcc,setconnectedAcc]=useState(null);
 
-  
-useEffect(() => {
+  async function getAccount() {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      .catch((err) => {
+        if (err.code === 4001) {
+          console.log('Please connect to MetaMask.');
+        } else {
+          console.error(err);
+        }
+      });
+      const account = accounts[0];
+      setconnectedAcc(account);
+      console.log(accounts);
+  }
+
   async function loadWeb3() {
     if (window.ethereum) {
-      const web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = CrowdFund.networks[networkId];
@@ -44,57 +58,48 @@ useEffect(() => {
         CrowdFund.abi,
         deployedNetwork.address
       );
-      //const accounts = await web3.eth.getAccounts();
+     
       const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
       setState({ web3, contract, account });
-      setManager(account);
-      console.log(manager);
+      getAccount();
     } else {
       console.log("MetaMask is not installed. Please install it.");
     }
   }
 
-  loadWeb3();
-}, []);
-
   useEffect(()=>{
-    const {contract}=state;
-    async function getbalance(){
-       const balnce= Number(await contract.methods.getBalance().call());
-       const balance=balnce/1000000000000000000;
-        setBalance(balance);
-        console.log(balance);
-    }
-    contract && getbalance();
-  },[state]);
-
-
+    getAccount()
+  },[]);
 
   return (
-    
     <div className="App">
-
-    
-      <h1>Welcome to CrowdFunding App</h1>
-      <p> Manager Address:{manager}</p>
-      <p> Balance : {balance}  ether</p>
+      <Header/>
+      <h1>Hey welcome to this!!</h1>
+      <p> Hii {connectedAcc}</p>
+      <button onClick={loadWeb3} disabled={connectedAcc}> {connectedAcc ? "connected" : "connect to wallet"}</button>
       <Router>
-        <Navbar />
         <Routes>
-          <Route exact path='/Sendeth' element={<Sendeth/>}/>
-          <Route exact path='/Register' element={<Register/>}/>
-          <Route exact path='/Find' element={<Find/>}/>
-          <Route exact path='/ViewReq' element={<ViewReq/>}/>
-          <Route exact path='/CreateReq' element={<CreateReq/>}/>
-          <Route exact path='/Voting' element={<Voting/>}/>
-          <Route exact path='/Withdraw' element={<Withdraw/>}/>
-          <Route exact path='/Signup' element={<Signup/>}/>
-          <Route exact path='/MyAccount' element={<MyAccount/>}/>
-          <Route exact path='/Sendpoints' element={<Sendpoints/>}/>
-          <Route exact path='/Contri_req' element={<Contri_req/>}/>
-          <Route exact path='/ViewContri' element={<ViewContri/>}/>
-          <Route exact path='/Pay' element={<Pay/>}/>
-          <Route exact path='/ViewPayee' element={<ViewPayee/>}/>
+          <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/CrowdFunding" element={<CrowdFunding/>}>
+              <Route path="CreateReq" element={<CreateReq/>}/>
+              <Route path="Contribute" element={<Contri_req/>}/>
+              <Route path="ViewReq" element={<ViewReq/>}/>
+              <Route path="SendEth" element={<Sendeth/>}/>
+              <Route path="Find" element={<Find/>}/>
+              <Route path="Voting" element={<Voting/>}/>
+          </Route>
+
+          <Route exact path="/Coins" element={<Coins/>}>
+          <Route path="CreateReq" element={<CreateReq/>}/>
+              <Route path="MyAccount" element={<MyAccount/>}/>
+              <Route path="Pay" element={<Pay/>}/>
+              <Route path="Register" element={<Register/>}/>
+              <Route path="Sendpoints" element={<Sendpoints/>}/>
+              <Route path="Signup" element={<Signup/>}/>
+              <Route path="ViewContri" element={<ViewContri/>}/>
+              <Route path="ViewPayee" element={<ViewPayee/>}/>
+          </Route>
+
         </Routes>
       </Router>
       

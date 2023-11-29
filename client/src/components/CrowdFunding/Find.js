@@ -1,20 +1,13 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "./contracts/CrowdFund.json";
+import CrowdFund from "../../contracts/CrowdFund.json";
 import Web3 from "web3";
-import "./App.css";
 
-
-  
-
-function Register() {
+function Find() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
    account: null,
   });
-
-  const [address, setAddress] = useState("");
-  const [password, setPassword] = useState("");
 
   useEffect(() => {
     async function loadWeb3() {
@@ -27,10 +20,10 @@ function Register() {
           CrowdFund.abi,
           deployedNetwork.address
         );
-       //const accounts = await web3.eth.getAccounts();
-       const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
+        //const accounts = await web3.eth.getAccounts();
+      const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
         setState({ web3, contract, account });
-     
+       
       } else {
         console.log("MetaMask is not installed. Please install it.");
       }
@@ -39,28 +32,41 @@ function Register() {
     loadWeb3();
   }, []);
 
-  
+  const [target, setTarget] = useState("");
+  const [password, setPassword] = useState("");
+  const [val, setVal] = useState(0); // This will store the contribution amount
 
-  const handleRegistration = async () => {
+  const handlefind = async () => {
     const {contract}=state;
-    console.log(contract);
-   
 
-    await contract.methods.register(address,password).send({from: address});
-    window.location.reload();
+    const value =Number(await contract.methods.Find(target,password).call());
+    const val=value/1000000000000000000;
+  
+    //console.log(val);
+   
+  
+    setVal(val);
+    const reloadInterval = 3000; 
+
+
+    setTimeout(function() {
+      
+      window.location.reload();
+    }, reloadInterval);
+     
   };
 
   return (
     <div>
-      <h2>Registration</h2>
+      <h2>Find Your Contribution</h2>
       <div>
         <input
           type="text"
-          id="address"
+          id="target"
           required="required"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Ethereum Address"
+          value={target}
+          onChange={(e) => setTarget(e.target.value)}
+          placeholder="Your Ethereum Address"
         />
       </div>
       <div>
@@ -70,14 +76,15 @@ function Register() {
           required="required"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Set Password"
+          placeholder="Password"
         />
       </div>
-      <button onClick={handleRegistration} className="button button2">
-        Register
+      <button onClick={handlefind} className="button button2">
+        Find
       </button>
+      <p>Your Contribution: {val} ether</p>
     </div>
   );
 }
 
-export default Register;
+export default Find;

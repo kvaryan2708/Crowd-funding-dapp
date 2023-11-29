@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "./contracts/CrowdFund.json";
+import CrowdFund from "../../contracts/CrowdFund.json";
 import Web3 from "web3";
-import "./App.css";
 
 
-  
-
-function Contri_req() {
+function CreateReq() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
@@ -43,9 +40,9 @@ function Contri_req() {
 
   const handlecreateReq = async () => {
     const {contract,web3,account}=state;
-    //const value = web3.utils.toWei(data2, "ether");
+    const value = web3.utils.toWei(data2, "ether");
   
-    await contract.methods.Contri_req(data1,data2,data3).send({from:account});
+    await contract.methods.createRequest(data1,value,data3).send({from:account,gas:210000});
   
       
     
@@ -54,7 +51,7 @@ function Contri_req() {
 
   return (
     <div>
-      <h2>Contri Request</h2>
+      <h2>Create Request</h2>
       <div>
         <input
           type="text"
@@ -72,7 +69,7 @@ function Contri_req() {
           required="required"
           value={data2}
           onChange={(e) => setData2(e.target.value)}
-          placeholder="  Amount"
+          placeholder=" Eth Amount"
         />
       </div>
       <div>
@@ -92,4 +89,4 @@ function Contri_req() {
   );
 }
 
-export default Contri_req;
+export default CreateReq;

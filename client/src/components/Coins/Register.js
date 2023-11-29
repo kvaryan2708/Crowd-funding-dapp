@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "./contracts/CrowdFund.json";
+import CrowdFund from "../../contracts/CrowdFund.json";
 import Web3 from "web3";
-import "./App.css";
+
 
 
   
 
-function Signup() {
+function Register() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
    account: null,
   });
-const[name,setName]=useState("");
+
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
 
@@ -43,26 +43,16 @@ const[name,setName]=useState("");
 
   const handleRegistration = async () => {
     const {contract}=state;
-    
+    console.log(contract);
    
 
-    await contract.methods.Signup(name,address,password).send({from: address});
+    await contract.methods.register(address,password).send({from: address});
     window.location.reload();
   };
 
   return (
     <div>
-      <h2>Signup</h2>
-      <div>
-        <input
-          type="text"
-          id="name"
-          required="required"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-        />
-      </div>
+      <h2>Registration</h2>
       <div>
         <input
           type="text"
@@ -84,10 +74,10 @@ const[name,setName]=useState("");
         />
       </div>
       <button onClick={handleRegistration} className="button button2">
-        Signup
+        Register
       </button>
     </div>
   );
 }
 
-export default Signup;
+export default Register;

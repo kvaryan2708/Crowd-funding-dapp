@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "./contracts/CrowdFund.json";
+import CrowdFund from "../../contracts/CrowdFund.json";
 import Web3 from "web3";
-import "./App.css";
+
 
 
 

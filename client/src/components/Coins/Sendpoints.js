@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "./contracts/CrowdFund.json";
+import CrowdFund from "../../contracts/CrowdFund.json";
 import Web3 from "web3";
-import "./App.css";
+
 
 
   
-function Voting() {
+
+function Sendpoints() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
    account: null,
   });
+  const [val,setVal]=useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     async function loadWeb3() {
@@ -26,7 +30,7 @@ function Voting() {
        //const accounts = await web3.eth.getAccounts();
        const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
         setState({ web3, contract, account });
-       
+     
       } else {
         console.log("MetaMask is not installed. Please install it.");
       }
@@ -35,63 +39,55 @@ function Voting() {
     loadWeb3();
   }, []);
 
-  const [out1, setOut1] = useState("");
-  const [out2, setOut2] = useState("");
-  const [out3,setOut3]= useState("");
   
 
- 
-
-  const fetchRequestDetails = async () => {
-    const {contract,web3}=state;
-  
+  const handleRegistration = async () => {
+    const {contract,account}=state;
     
-  await contract.methods.voting(out1,out2,out3).send({from:out2});
-  
-  window.location.reload();
+   
 
- 
-  }
+    await contract.methods.Sendpoints(val,address,password).send({from:account});
+    window.location.reload();
+  };
 
   return (
     <div>
-      <h2>Vote</h2>
+      <h2>Send Money</h2>
       <div>
         <input
           type="text"
-          id="out1"
+          id="val"
           required="required"
-          value={out1}
-          onChange={(e) => setOut1(e.target.value)}
-          placeholder="Request No"
+          value={val}
+          onChange={(e) => setVal(e.target.value)}
+          placeholder="Value"
         />
       </div>
       <div>
         <input
           type="text"
-          id="out2"
+          id="address"
           required="required"
-          value={out2}
-          onChange={(e) => setOut2(e.target.value)}
-          placeholder="Your Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Ethereum Address"
         />
       </div>
       <div>
         <input
-          type="Password"
-          id="out3"
+          type="password"
+          id="password"
           required="required"
-          value={out3}
-          onChange={(e) => setOut3(e.target.value)}
-          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder=" Password"
         />
       </div>
-      <button onClick={fetchRequestDetails} className="button button2">
-      Vote
+      <button onClick={handleRegistration} className="button button2">
+        Send
       </button>
-     
     </div>
   );
 }
 
-export default Voting;
+export default Sendpoints;
