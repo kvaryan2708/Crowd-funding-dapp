@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "../../contracts/CrowdFund.json";
+import CrowdFund from "./contracts/CrowdFund.json";
 import Web3 from "web3";
-
+import "./App.css";
 
 
   
 
-function Signup() {
+function Sendpoints() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
    account: null,
   });
-const[name,setName]=useState("");
+  const [val,setVal]=useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
 
@@ -42,25 +42,25 @@ const[name,setName]=useState("");
   
 
   const handleRegistration = async () => {
-    const {contract}=state;
+    const {contract,account}=state;
     
    
 
-    await contract.methods.Signup(name,address,password).send({from: address});
+    await contract.methods.Sendpoints(val,address,password).send({from:account});
     window.location.reload();
   };
 
   return (
     <div>
-      <h2>Signup</h2>
+      <h2>Send Money</h2>
       <div>
         <input
           type="text"
-          id="name"
+          id="val"
           required="required"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
+          value={val}
+          onChange={(e) => setVal(e.target.value)}
+          placeholder="Value"
         />
       </div>
       <div>
@@ -80,14 +80,14 @@ const[name,setName]=useState("");
           required="required"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Set Password"
+          placeholder=" Password"
         />
       </div>
       <button onClick={handleRegistration} className="button button2">
-        Signup
+        Send
       </button>
     </div>
   );
 }
 
-export default Signup;
+export default Sendpoints;

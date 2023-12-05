@@ -1,20 +1,16 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "../../contracts/CrowdFund.json";
+import CrowdFund from "./contracts/CrowdFund.json";
 import Web3 from "web3";
-
+import "./App.css";
 
 
   
-
-function Register() {
+function Voting() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
    account: null,
   });
-
-  const [address, setAddress] = useState("");
-  const [password, setPassword] = useState("");
 
   useEffect(() => {
     async function loadWeb3() {
@@ -30,7 +26,7 @@ function Register() {
        //const accounts = await web3.eth.getAccounts();
        const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
         setState({ web3, contract, account });
-     
+       
       } else {
         console.log("MetaMask is not installed. Please install it.");
       }
@@ -39,45 +35,63 @@ function Register() {
     loadWeb3();
   }, []);
 
+  const [out1, setOut1] = useState("");
+  const [out2, setOut2] = useState("");
+  const [out3,setOut3]= useState("");
   
 
-  const handleRegistration = async () => {
-    const {contract}=state;
-    console.log(contract);
-   
+ 
 
-    await contract.methods.register(address,password).send({from: address});
-    window.location.reload();
-  };
+  const fetchRequestDetails = async () => {
+    const {contract,web3}=state;
+  
+    
+  await contract.methods.voting(out1,out2,out3).send({from:out2});
+  
+  window.location.reload();
+
+ 
+  }
 
   return (
     <div>
-      <h2>Registration</h2>
+      <h2>Vote</h2>
       <div>
         <input
           type="text"
-          id="address"
+          id="out1"
           required="required"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Ethereum Address"
+          value={out1}
+          onChange={(e) => setOut1(e.target.value)}
+          placeholder="Request No"
         />
       </div>
       <div>
         <input
-          type="password"
-          id="password"
+          type="text"
+          id="out2"
           required="required"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Set Password"
+          value={out2}
+          onChange={(e) => setOut2(e.target.value)}
+          placeholder="Your Address"
         />
       </div>
-      <button onClick={handleRegistration} className="button button2">
-        Register
+      <div>
+        <input
+          type="Password"
+          id="out3"
+          required="required"
+          value={out3}
+          onChange={(e) => setOut3(e.target.value)}
+          placeholder="Password"
+        />
+      </div>
+      <button onClick={fetchRequestDetails} className="button button2">
+      Vote
       </button>
+     
     </div>
   );
 }
 
-export default Register;
+export default Voting;

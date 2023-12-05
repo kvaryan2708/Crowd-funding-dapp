@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "../../contracts/CrowdFund.json";
+import CrowdFund from "./contracts/CrowdFund.json";
 import Web3 from "web3";
+import "./App.css";
 
 
   
-function ViewReq() {
+function ViewContri() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
@@ -37,6 +38,9 @@ function ViewReq() {
   const [out1, setOut1] = useState("");
   const [out2, setOut2] = useState("");
   const [out3,setOut3]= useState("");
+  const [out4, setOut4] = useState("");
+  const [out5, setOut5] = useState("");
+  const [out6,setOut6]= useState("");
   // Other state variables as needed
 
   const [num, setNum] = useState(""); // State variable for request number
@@ -46,12 +50,15 @@ function ViewReq() {
   const fetchRequestDetails = async () => {
     const {contract}=state;
   
-    const out1=String(await contract.methods.viewD(num).call());
-    const out=Number(await contract.methods.viewM(num).call());
-  const out2=out/1000000000000000000;
-    const out3=String(await contract.methods.viewS(num).call());
+    const out1=String(await contract.methods.View_des(num).call());
+    const out2=Number(await contract.methods.View_total(num).call());
   
-   setOut1(out1);setOut2(out2);setOut3(out3);
+    const out3=Number(await contract.methods.View_person(num).call());
+    const out4=Number(await contract.methods.View_remaining(num).call());
+    const out5=Number(await contract.methods.View_client(num).call());
+    const out6=String(await contract.methods.View_status(num).call());
+  
+   setOut1(out1);setOut2(out2);setOut3(out3);setOut4(out4);setOut5(out5);setOut6(out6);
    const reloadInterval = 3000; 
 
 
@@ -79,10 +86,13 @@ setTimeout(function() {
         View
       </button>
       <p>Desc: {out1}</p>
-      <p>Money: {out2} ether</p>
-      <p>Status: {out3}</p>
+      <p>total: {out2} </p>
+      <p>Per Person: {out3}</p>
+      <p>Collected: {out4}</p>
+      <p>People Paid: {out5} </p>
+      <p>Status: {out6}</p>
     </div>
   );
 }
 
-export default ViewReq;
+export default ViewContri;

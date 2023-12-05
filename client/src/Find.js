@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "../../contracts/CrowdFund.json";
+import CrowdFund from "./contracts/CrowdFund.json";
 import Web3 from "web3";
+import "./App.css";
 
-
-function Withdraw() {
+function Find() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
@@ -21,8 +21,8 @@ function Withdraw() {
           CrowdFund.abi,
           deployedNetwork.address
         );
-        const accounts = await web3.eth.getAccounts();
-        const account = accounts[0];
+        //const accounts = await web3.eth.getAccounts();
+      const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
         setState({ web3, contract, account });
        
       } else {
@@ -33,60 +33,41 @@ function Withdraw() {
     loadWeb3();
   }, []);
 
-
-  const [id, setId] = useState("");
-  const [ammount,setAmmount]=useState("");
-  const [address,setAddress]=useState("");
+  const [target, setTarget] = useState("");
   const [password, setPassword] = useState("");
- 
+  const [val, setVal] = useState(0); // This will store the contribution amount
 
   const handlefind = async () => {
-    const {contract,account,web3}=state;
-    const value = web3.utils.toWei(ammount, "ether");
+    const {contract}=state;
 
-    
+    const value =Number(await contract.methods.Find(target,password).call());
+    const val=value/1000000000000000000;
   
-      await contract.methods.Withdraw(id,address,password).send({ from: account, value: value });
-  
-  
-     window.location.reload();
-  
-  
-}  
+    //console.log(val);
    
-   
+  
+    setVal(val);
+    const reloadInterval = 3000; 
+
+
+    setTimeout(function() {
+      
+      window.location.reload();
+    }, reloadInterval);
+     
+  };
 
   return (
     <div>
-      <h2>Withdrawl</h2>
+      <h2>Find Your Contribution</h2>
       <div>
         <input
           type="text"
-          id="id"
+          id="target"
           required="required"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-          placeholder="Request No"
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          id="ammount"
-          required="required"
-          value={ammount}
-          onChange={(e) => setAmmount(e.target.value)}
-          placeholder="Ammount"
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          id="address"
-          required="required"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Recipient Address"
+          value={target}
+          onChange={(e) => setTarget(e.target.value)}
+          placeholder="Your Ethereum Address"
         />
       </div>
       <div>
@@ -100,11 +81,11 @@ function Withdraw() {
         />
       </div>
       <button onClick={handlefind} className="button button2">
-       Withdraw
+        Find
       </button>
-      
+      <p>Your Contribution: {val} ether</p>
     </div>
   );
 }
 
-export default Withdraw;
+export default Find;

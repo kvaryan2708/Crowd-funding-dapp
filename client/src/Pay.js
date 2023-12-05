@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import CrowdFund from "../../contracts/CrowdFund.json";
+import CrowdFund from "./contracts/CrowdFund.json";
 import Web3 from "web3";
+import "./App.css";
 
-
-function ViewPayee() {
+function Pay() {
   const [state, setState] = useState({
     web3: null,
     contract: null,
@@ -21,8 +21,8 @@ function ViewPayee() {
           CrowdFund.abi,
           deployedNetwork.address
         );
-        //const accounts = await web3.eth.getAccounts();
-      const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
+       //const accounts = await web3.eth.getAccounts();
+       const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
         setState({ web3, contract, account });
        
       } else {
@@ -33,59 +33,68 @@ function ViewPayee() {
     loadWeb3();
   }, []);
 
-  const [target, setTarget] = useState("");
-  const [value, setValue] = useState("");
-  const [val, setVal] = useState(0); // This will store the contribution amount
+
+  const [id, setId] = useState("");
+  const [address,setAddress]=useState("");
+  const [password, setPassword] = useState("");
+ 
 
   const handlefind = async () => {
-    const {contract}=state;
+    const {contract,account,web3}=state;
+ ;
 
-    const val =String(await contract.methods.ViewPayee(target,value).call());
-   // const val=value/1000000000000000000;
+    
   
-    //console.log(val);
+      await contract.methods.Pay(id,address,password).send({ from: account,gas:210000});
+  
+  
+     window.location.reload();
+  
+  
+}  
    
-  
-    setVal(val);
-    const reloadInterval = 3000; 
-
-
-    setTimeout(function() {
-      
-      window.location.reload();
-    }, reloadInterval);
-     
-  };
+   
 
   return (
     <div>
-      <h2>Payees</h2>
+      <h2>Pay</h2>
       <div>
         <input
           type="text"
-          id="target"
+          id="id"
           required="required"
-          value={target}
-          onChange={(e) => setTarget(e.target.value)}
-          placeholder="Req No"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          placeholder="Request No"
         />
       </div>
       <div>
         <input
           type="text"
-          id="value"
+          id="address"
           required="required"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Index"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Address"
+        />
+      </div>
+      
+      <div>
+        <input
+          type="password"
+          id="password"
+          required="required"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
         />
       </div>
       <button onClick={handlefind} className="button button2">
-        Find
+       Pay
       </button>
-      <p>Payee Name: {val} </p>
+      
     </div>
   );
 }
 
-export default ViewPayee;
+export default Pay;

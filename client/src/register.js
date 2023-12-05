@@ -43,7 +43,7 @@ function Register() {
 
   const handleRegistration = async () => {
     const {contract}=state;
-    
+    console.log(contract);
    
 
     await contract.methods.register(address,password).send({from: address});

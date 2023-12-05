@@ -21,8 +21,13 @@ function Withdraw() {
           CrowdFund.abi,
           deployedNetwork.address
         );
+<<<<<<< HEAD
        //const accounts = await web3.eth.getAccounts();
        const account = "0xd377254722D3274f66eB66c392925F6052335CcB";
+=======
+        const accounts = await web3.eth.getAccounts();
+        const account = accounts[0];
+>>>>>>> parent of 5094bbb (modularized the frontend code)
         setState({ web3, contract, account });
        
       } else {
