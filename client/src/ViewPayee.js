@@ -35,11 +35,8 @@ function ViewPayee() {
 
   const [target, setTarget] = useState("");
   const [value, setValue] = useState("");
-<<<<<<< HEAD
-  const [val, setVal] = useState(""); // This will store the contribution amount
-=======
+  // const [val, setVal] = useState(""); // This will store the contribution amount
   const [val, setVal] = useState(0); // This will store the contribution amount
->>>>>>> parent of 5094bbb (modularized the frontend code)
 
   const handlefind = async () => {
     const {contract}=state;
