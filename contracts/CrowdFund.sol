@@ -122,6 +122,9 @@ return data[r];
     uint points;
     uint passcode;
     
+    uint paid;
+    uint[] paidArray;
+    
     
     
     
@@ -137,6 +140,9 @@ function Signup(string memory _name,address ad,uint _p) public{
     newdata.name=_name;
     newdata.points=0;
     newdata.passcode=_p;
+    newdata.paid=0;
+
+    
     if(records3[ad]==0)
     people++;
 
